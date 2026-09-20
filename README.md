@@ -2,30 +2,87 @@
 
 **Repository Re-Organizer Agent**
 
-rerere reads a repository, understands its current structure and meaning, and reorganizes it with minimal change.
+rerere receives repository analysis and reorganizes the repository accordingly.
 
-It is the repository-organizing agent in the bons.ai ecosystem.
+## Position
+
+`repos-analyze` is the **analysis & action hub**: it observes repository data, analyzes repository life cycles, and can execute lifecycle actions such as stale detection, archive, snapshot, and feeds.
+
+`rerere` is the **re-organization agent** downstream of that analysis. Its concern is the internal structure and semantic organization of an individual repository.
+
+```
+GitHub repositories
+      ↓
+repos-analyze
+  observe / analyze
+      ↓
+analysis result
+      ↓
+rerere
+  understand / reorganize
+      ↓
+organized repository
+```
 
 ## Core loop
 
-`read → understand → detect → decide → reorganize → verify → commit`
+`receive → understand → detect → decide → reorganize → verify → commit`
+
+## Input
+
+Analysis results from `repos-analyze`, together with the target repository's current state.
+
+Typical signals include:
+
+- repository role/domain
+- activity and lifecycle state
+- duplicate or related repositories
+- stale/obsolete candidates
+- structural observations
+- repository metadata and history
+
+The analysis is evidence. rerere interprets that evidence against the repository itself before changing it.
+
+## Actions
+
+rerere may:
+
+- move
+- rename
+- merge
+- split
+- archive internal material
+- remove redundant material
+- update documentation
+- establish clearer boundaries
+
+Prefer minimal and reversible changes.
+
+## Preserve
+
+- repository intent
+- working behavior
+- canonical data
+- useful history
+- explicit user intent
 
 ## Design principles
 
 1. **1 repo = 1 agent**
-2. Preserve the repository's own semantics.
-3. Prefer minimal and reversible changes.
-4. GitHub is the canonical source of truth.
-5. Structure follows meaning, not a universal template.
+2. Structure follows meaning, not a universal template.
+3. Do not reorganize for organization itself.
+4. Analysis and reorganization are separate concerns.
+5. GitHub is the canonical source of truth.
 
-## Related agents
+## Ecosystem
 
-- `agentify` — turns a repository into an agent by defining `agent.md`
-- `rerere` — organizes an existing repository
-- `nurse-aoi` — observes conversations and notices pain/concern
-- `solve` — turns issues into actions
-- `tango` — orchestrates agents
+- `repos-analyze` — repository analysis & action hub
+- `rerere` — repository re-organization
+- `agentify` — repository → agent definition
+- `nurse-aoi` — conversation → pain/concern observation
+- `solve` — issue/pain → action
+- `tango` — orchestration
 
-## First principle
+## Principle
 
-**Do not organize for organization itself. Organize so the repository can be understood and acted on.**
+> Read what the repository is, receive what analysis discovered, then reorganize it without destroying its meaning.
